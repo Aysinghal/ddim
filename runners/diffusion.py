@@ -31,13 +31,13 @@ def get_beta_schedule(beta_schedule, *, beta_start, beta_end, num_diffusion_time
 
     if beta_schedule == "quad":
         betas = (
-            np.linspace(
-                beta_start ** 0.5,
-                beta_end ** 0.5,
-                num_diffusion_timesteps,
-                dtype=np.float64,
-            )
-            ** 2
+                np.linspace(
+                    beta_start ** 0.5,
+                    beta_end ** 0.5,
+                    num_diffusion_timesteps,
+                    dtype=np.float64,
+                )
+                ** 2
         )
     elif beta_schedule == "linear":
         betas = np.linspace(
@@ -86,7 +86,7 @@ class Diffusion(object):
             [torch.ones(1).to(device), alphas_cumprod[:-1]], dim=0
         )
         posterior_variance = (
-            betas * (1.0 - alphas_cumprod_prev) / (1.0 - alphas_cumprod)
+                betas * (1.0 - alphas_cumprod_prev) / (1.0 - alphas_cumprod)
         )
         if self.model_var_type == "fixedlarge":
             self.logvar = betas.log()
@@ -130,7 +130,7 @@ class Diffusion(object):
             if self.config.model.ema:
                 ema_helper.load_state_dict(states[4])
 
-        for epoch in range(start_epoch, self.config.training.n_epochs):
+        for epoch in range(start_epoch, 1):  #self.config.training.n_epochs):
             data_start = time.time()
             data_time = 0
             for i, (x, y) in enumerate(train_loader):
@@ -154,7 +154,7 @@ class Diffusion(object):
                 tb_logger.add_scalar("loss", loss, global_step=step)
 
                 logging.info(
-                    f"step: {step}, loss: {loss.item()}, data time: {data_time / (i+1)}"
+                    f"step: {step}, loss: {loss.item()}, data time: {data_time / (i + 1)}"
                 )
 
                 optimizer.zero_grad()
@@ -250,7 +250,7 @@ class Diffusion(object):
 
         with torch.no_grad():
             for _ in tqdm.tqdm(
-                range(n_rounds), desc="Generating image samples for FID evaluation."
+                    range(n_rounds), desc="Generating image samples for FID evaluation."
             ):
                 n = config.sampling.batch_size
                 x = torch.randn(
@@ -299,8 +299,8 @@ class Diffusion(object):
         def slerp(z1, z2, alpha):
             theta = torch.acos(torch.sum(z1 * z2) / (torch.norm(z1) * torch.norm(z2)))
             return (
-                torch.sin((1 - alpha) * theta) / torch.sin(theta) * z1
-                + torch.sin(alpha * theta) / torch.sin(theta) * z2
+                    torch.sin((1 - alpha) * theta) / torch.sin(theta) * z1
+                    + torch.sin(alpha * theta) / torch.sin(theta) * z2
             )
 
         z1 = torch.randn(
@@ -328,7 +328,7 @@ class Diffusion(object):
         # Hard coded here, modify to your preferences
         with torch.no_grad():
             for i in range(0, x.size(0), 8):
-                xs.append(self.sample_image(x[i : i + 8], model))
+                xs.append(self.sample_image(x[i: i + 8], model))
         x = inverse_data_transform(config, torch.cat(xs, dim=0))
         for i in range(x.size(0)):
             tvu.save_image(x[i], os.path.join(self.args.image_folder, f"{i}.png"))
@@ -345,10 +345,10 @@ class Diffusion(object):
                 seq = range(0, self.num_timesteps, skip)
             elif self.args.skip_type == "quad":
                 seq = (
-                    np.linspace(
-                        0, np.sqrt(self.num_timesteps * 0.8), self.args.timesteps
-                    )
-                    ** 2
+                        np.linspace(
+                            0, np.sqrt(self.num_timesteps * 0.8), self.args.timesteps
+                        )
+                        ** 2
                 )
                 seq = [int(s) for s in list(seq)]
             else:
@@ -363,10 +363,10 @@ class Diffusion(object):
                 seq = range(0, self.num_timesteps, skip)
             elif self.args.skip_type == "quad":
                 seq = (
-                    np.linspace(
-                        0, np.sqrt(self.num_timesteps * 0.8), self.args.timesteps
-                    )
-                    ** 2
+                        np.linspace(
+                            0, np.sqrt(self.num_timesteps * 0.8), self.args.timesteps
+                        )
+                        ** 2
                 )
                 seq = [int(s) for s in list(seq)]
             else:
