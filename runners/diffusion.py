@@ -99,6 +99,8 @@ class Diffusion(object):
         args, config = self.args, self.config
         tb_logger = self.config.tb_logger
         dataset, test_dataset = get_dataset(args, config)
+        print(type(dataset))
+        print(dataset)
         train_loader = data.DataLoader(
             dataset,
             batch_size=config.training.batch_size,
@@ -233,6 +235,7 @@ class Diffusion(object):
         model.eval()
 
         if self.args.fid:
+
             self.sample_fid(model)
         elif self.args.interpolation:
             self.sample_interpolation(model)
