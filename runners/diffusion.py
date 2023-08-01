@@ -132,7 +132,7 @@ class Diffusion(object):
             if self.config.model.ema:
                 ema_helper.load_state_dict(states[4])
 
-        for epoch in range(start_epoch, 1):  #self.config.training.n_epochs):
+        for epoch in range(start_epoch, 10):  #self.config.training.n_epochs):
             data_start = time.time()
             data_time = 0
             for i, (x, y) in enumerate(train_loader):
